@@ -1,0 +1,14 @@
+#napraviti virtualni enviroment, nije toliko vazno ali eto
+py -3 -m venv venv
+# ovo je aktivacija tog enviromenta
+. venv/Scripts/activate
+# instalacija flaska i ponya
+pip install Flask pony
+
+
+"id": "jdcjsdcbsdkhb",
+	"ime": "leona",
+	"prezime": "strucelj",
+	"email": "leona",
+	"lozinka": "3dsfas",
+	"admin": true

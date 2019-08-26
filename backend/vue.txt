@@ -1,0 +1,20 @@
+
+login(){
+		axios.post("/post", this.unit)
+			.then((response) => {
+				this.$router.back(); //vraćanje na ekran s popisom svih unesenih smještajnih jedinica
+			})
+			.catch((error) => {
+				console.log(error);
+			})
+			.finally(() => {
+				console.log("loading done");
+			});
+			}
+			
+getData() {
+	this.loading = true;
+	axios.get("/get").then(({data}) => {
+		this.units = data.data;
+	});
+}
