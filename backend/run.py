@@ -1,11 +1,12 @@
 from flask import Flask, render_template, jsonify, request, redirect, url_for
 from random import *
 from flask_cors import CORS
-from domain import Troskovi, Korisnici
+from domain import Troskovi, Korisnici, Kategorije, Grupe
 import requests, uuid
 import os, json
 from pony.orm import db_session, select
 import bcrypt
+import logging
 from uuid import uuid4
 from flask_jwt_extended import JWTManager
 from flask_jwt_extended import create_access_token
@@ -34,12 +35,84 @@ def generatePass(password):
 
 def checkPass(password, hashPass):
     print(bcrypt.checkpw(password.encode('utf-8'), hashPass.encode('utf-8')))
-    return bcrypt.checkpw(password.encode('utf-8'), hashPass.encode('utf-8'))
+    return (bcrypt.checkpw(password.encode('utf-8'), hashPass.encode('utf-8')))
     #if (bcrypt.hashpw(password.encode('utf-8'), salt)) == hashPass.encode('utf-8'):
      #   return 1
     #else:
      #   return 0
 
+
+
+@app.route('/grupa/korisnik', methods=['POST', 'DELETE'])
+def dodavanje_brisanje_korisnika_grupe():
+    response_object = {'status': 'success'}
+    if request.method == 'POST':
+        post_data = request.get_json()
+
+        email = post_data.get('email')
+        ime_grupe = post_data.get('imeGrupe')
+        # dodavanje po email i ime grupe
+        _id = Korisnici.dodaj_korisnika_grupe(email, ime_grupe)
+        print(_id)
+        if _id is 0:
+            response_object['message'] = 'Pogresan unos email ili ime grupe!'
+        else:
+            response_object['message'] = 'Korisnik dodan u grupu!'
+
+
+    return jsonify(response_object)
+
+
+
+@app.route('/korisnik/trosak', methods=['POST', 'GET'])
+def ispis_korisnikove_troskove():
+    response_object = {'status': 'success'}
+    if request.method == 'POST':
+        post_data = request.get_json()
+        email = post_data.get('email')
+        data = Korisnici.dohvatiKorisnikoveTroskove(email)
+
+        print(data)
+
+        response_object['troskovi'] = data
+
+    return jsonify(response_object)
+
+
+@app.route('/korisnik/grupa', methods=['POST', 'GET'])
+def ispis_grupa_korisnika():
+    response_object = {'status': 'success'}
+    if request.method == 'POST':
+        post_data = request.get_json()
+
+        data = Korisnici.dohvatiGrupeKorisnika(post_data.get('email'))
+        print(data)
+
+        response_object['grupe'] = data
+
+    return jsonify(response_object)
+
+
+@app.route('/grupa', methods=['POST', 'GET'])
+def dodavanje_ispis_grupe():
+    response_object = {'status': 'success'}
+    if request.method == 'POST':
+        post_data = request.get_json()
+
+        _id = Grupe.create(post_data)
+
+        if _id is None:
+            return error()
+
+        response_object['message'] = 'Grupa kreirana!'
+
+    else:
+        grupe = Grupe.listall()
+        if grupe is None:
+            return error()
+        response_object['grupe'] = grupe
+
+    return jsonify(response_object)
 
 
 @app.route('/prijava', methods=['POST', 'GET'])
@@ -60,27 +133,29 @@ def prijava_korisnika():
 
         res = Korisnici.prijava_korisnika(email, lozinka)
 
-        print(res.lozinka)
 
         if res is None:
             return error()
 
         if checkPass(lozinka, res.lozinka):
+            print("checkpass")
+            print(checkPass(lozinka, res.lozinka))
             access_token = create_access_token(identity = {'ime': res.ime, 'prezime': res.prezime, 'email': res.email})
 
+            print(access_token)
 
-            result = access_token
-            #result['status'] = 'success'
-            #result['message'] = 'Korisnik prijavljen!'
+            #result = access_token
+            result  = {'access_token': access_token}
+            result['status'] = 'success'
+            result['message'] = 'Korisnik prijavljen!'
 
         else:
             #result = jsonify({'error': 'Invalid username and password'})
-            #result['status'] = 'failed'
-            #result['message'] = 'Pogresno upisana email ili lozinka!'
+            result = {'status': 'failed'}
+            result['message'] = 'Pogresno upisana email ili lozinka!'
             return error()
 
-
-    return result
+    return jsonify(result)
     #return jsonify(response_object)
 
 @app.route('/korisnici', methods=['GET', 'POST'])
@@ -121,13 +196,126 @@ def svi_korisnici():
     return jsonify(response_object)
 
 
+@app.route('/troskovi/korisnik', methods=['POST', 'GET'])
+def korisnikovi_troskovi():
+    response_object = {'status': 'success'}
+    if request.method == 'POST':
+        post_data = request.get_json()
+        try:
+
+            email = post_data.get('email')
+
+            if email is None:
+                return error()
+
+            #Korisnici.korisnik_trosak_po_kategoriji(_email, 'Auto')
+
+            auto = Troskovi.korisnik_trosak_po_kategoriji(email, 'Auto')
+            if auto is None:
+                return error()
+            hrana = Troskovi.korisnik_trosak_po_kategoriji(email, 'Hrana')
+            if hrana is None:
+                return error()
+            kuca = Troskovi.korisnik_trosak_po_kategoriji(email, 'Kuca')
+            if kuca is None:
+                return error()
+            mobitel = Troskovi.korisnik_trosak_po_kategoriji(email, 'Mobitel')
+            if mobitel is None:
+                return error()
+            roba = Troskovi.korisnik_trosak_po_kategoriji(email, 'Roba')
+            if roba is None:
+                return error()
+            shop = Troskovi.korisnik_trosak_po_kategoriji(email, 'Shop')
+            if shop is None:
+                return error()
+            sport = Troskovi.korisnik_trosak_po_kategoriji(email, 'Sport')
+            if sport is None:
+                return error()
+            zdravlje = Troskovi.korisnik_trosak_po_kategoriji(email, 'Zdravlje')
+            if zdravlje is None:
+                return error()
+
+            troskovi= {
+                "auto": auto,
+                "hrana": hrana,
+                "kuca": kuca,
+                "mobitel": mobitel,
+                "roba": roba,
+                "shop": shop,
+                "sport": sport,
+                "zdravlje": zdravlje
+            }
+
+            response_object['troskovi'] = troskovi
+        except Exception as e:
+            logging.exception("Error getting data")
+
+    else:
+        auto = Troskovi.dohvatiTrosakPoKategoriji('Auto')
+        if auto is None:
+            return error()
+        hrana = Troskovi.dohvatiTrosakPoKategoriji('Hrana')
+        if hrana is None:
+            return error()
+        kuca = Troskovi.dohvatiTrosakPoKategoriji('Kuca')
+        if kuca is None:
+            return error()
+        mobitel = Troskovi.dohvatiTrosakPoKategoriji('Mobitel')
+        if mobitel is None:
+            return error()
+        roba = Troskovi.dohvatiTrosakPoKategoriji('Roba')
+        if roba is None:
+            return error()
+        shop = Troskovi.dohvatiTrosakPoKategoriji('Shop')
+        if shop is None:
+            return error()
+        sport = Troskovi.dohvatiTrosakPoKategoriji('Sport')
+        if sport is None:
+            return error()
+        zdravlje = Troskovi.dohvatiTrosakPoKategoriji('Zdravlje')
+        if zdravlje is None:
+            return error()
+
+
+
+        troskovi= {
+            "auto": auto,
+            "hrana": hrana,
+            "kuca": kuca,
+            "mobitel": mobitel,
+            "roba": roba,
+            "shop": shop,
+            "sport": sport,
+            "zdravlje": zdravlje
+        }
+
+        response_object['troskovi'] = troskovi
+
+
+    return jsonify(response_object)
+
+
+
 @app.route('/troskovi', methods=['GET', 'POST'])
 def svi_troskovi():
     response_object = {'status': 'success'}
     if request.method == 'POST':
         post_data = request.get_json()
-        _id = Troskovi.create(post_data)
-        if _id is None:
+        _id = Korisnici.dohvatiIDpoEmailu(post_data.get('korisnik'))
+
+
+        print(_id)
+
+        newData= {
+            "naziv": post_data.get('naziv'),
+            "iznos": post_data.get('iznos'),
+            "korisnik": _id,
+            "kategorija": post_data.get('kategorija')
+        }
+
+
+        _i = Troskovi.create(newData)
+        if _i is None:
             return error()
 
         response_object['message'] = 'Trosak dodan!'

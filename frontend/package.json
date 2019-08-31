@@ -1,8 +1,8 @@
 {
-  "name": "dwa",
+  "name": "frontend",
   "version": "1.0.0",
   "description": "A Vue.js project",
-  "author": "Leona044 <45042289+Leona044@users.noreply.github.com>",
+  "author": "",
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
@@ -12,7 +12,8 @@
   },
   "dependencies": {
     "axios": "^0.19.0",
-    "bootstrap-vue": "^2.0.0-rc.28",
+    "bootstrap": "^4.3.1",
+    "bootstrap-vue": "^2.0.0-rc.19",
     "jwt-decode": "^2.2.0",
     "mdbvue": "^5.8.1",
     "vue": "^2.5.2",

@@ -28,7 +28,7 @@ def _deactivate(args):
 _deactivate(["nondestructive"])
 aliases["deactivate"] = _deactivate
 
-$VIRTUAL_ENV = r"C:\Users\struc\OneDrive\RADNAP~1\DWAPRO~1\backend\venv"
+$VIRTUAL_ENV = r"C:\Users\MSSTUD~1\WEBSTO~1\UNTITL~1\backend\venv"
 
 $_OLD_VIRTUAL_PATH = $PATH
 $PATH = $PATH[:]

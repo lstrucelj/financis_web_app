@@ -1,6 +1,6 @@
 from pony.orm import db_session, select
 import logging
-from model import Trosak, Korisnik
+from model import Trosak, Korisnik, Kategorija, Grupa
 import datetime as dt
 from collections import deque
 from decimal import Decimal
@@ -55,12 +55,116 @@ class Base:
             logging.exception("Error saving data")
 
 
+class Kategorije(Base):
+    model_class = Kategorija
+
+class Grupe(Base):
+    model_class = Grupa
+
+
+
 class Troskovi(Base):
     model_class = Trosak
+
+    @classmethod
+    @db_session
+    def dohvatiTrosakPoKategoriji(cls, _naziv):
+
+        data = select(sum(t.iznos) for t in Trosak if t.kategorija.naziv == _naziv)
+
+        if data is None:
+            return None
+
+        return data.first()
+
+
+    @classmethod
+    @db_session
+    def korisnik_trosak_po_kategoriji(cls, _email, _naziv):
+
+        data = select(sum(t.iznos) for t in Trosak if t.kategorija.naziv == _naziv and t.korisnik.email == _email)
+
+        if data is None:
+            return None
+
+        return data.first()
+
+
 
 
 class Korisnici(Base):
     model_class = Korisnik
+
+    @classmethod
+    @db_session
+    def troskovi_korisnika_po_kategoriji(cls, _email,  _kategorija):
+
+        k = Korisnik.get(email = _email)
+        troskovi = k.trosak
+
+        data = select(t for t in troskovi if t.kategorija.naziv == _kategorija)
+
+        return [u.to_dict() for u in data]
+
+    @classmethod
+    @db_session
+    def dohvatiKorisnikoveTroskove(cls, _email):
+
+        k = Korisnik.get(email = _email)
+        data = k.trosak.copy()
+
+        if data is None:
+            return None
+
+        return [d.to_dict() for d in data]
+
+    @classmethod
+    @db_session
+    def dohvatiGrupeKorisnika(cls, _email):
+
+        k = Korisnik.get(email = _email)
+        data = k.grupa.copy()
+
+        if data is None:
+            return None
+
+        return [d.to_dict() for d in data]
+
+    @classmethod
+    @db_session
+    def dohvatiIDpoEmailu(cls, _email):
+        kor = Korisnik.get(email = _email)
+        return kor.id
+
+
+    @classmethod
+    @db_session
+    def dodaj_korisnika_grupe(cls, _email, _ime):
+
+        kor = Korisnik.get(email = _email)
+        print(kor)
+
+        if kor is None:
+            return 0
+
+        gru = Grupa.get(ime = _ime)
+
+        print(gru)
+
+        if gru is None:
+            return 0
+
+        test = kor.grupa.add(gru)
+
+        print(test)
+        return 1
+
+        #if test is None:
+         #   return 0
+        #else:
+         #   return 1
+
+
 
     @classmethod
     @db_session

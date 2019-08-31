@@ -107,7 +107,7 @@ export default {
           // this.$router.go()
         })
         .catch((error) => {
-          this.message = 'Korisnik nije kreiran - error!'
+          this.message = 'Korisnik je vec registriran!'
           this.showMessage = true
           console.log(error)
         })

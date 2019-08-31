@@ -11,10 +11,11 @@
       <router-link to="/troskovi">Test</router-link>
   -->
   <div>
-
+<!--
     <div class="signin">
       <router-link to="/login">Sign in</router-link>
     </div>
+    -->
     <div class="main">
       <h1 style="color: whitesmoke; margin-top: 190px; font-size: 50px">
         TAKE CONTROL OF YOUR MONEY

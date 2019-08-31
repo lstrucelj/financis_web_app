@@ -6,6 +6,7 @@ import Login from '@/components/Login'
 import Registration from '@/components/Registration'
 import Profile from '@/components/Profile'
 import Troskovi from '@/components/Troskovi'
+import Statistika from '@/components/Statistika'
 import NotFound from '@/components/NotFound'
 
 Vue.use(Router)
@@ -36,6 +37,11 @@ export default new Router({
       path: '/troskovi',
       name: 'Troskovi',
       component: Troskovi
+    },
+    {
+      path: '/statistika',
+      name: 'Statistika',
+      component: Statistika
     },
     {
       path: '/*',

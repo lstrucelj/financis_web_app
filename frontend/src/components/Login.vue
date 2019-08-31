@@ -50,6 +50,7 @@ import router from '../router'
 export default {
   data () {
     return {
+      access_token: '',
       loginForm: {
         email: '',
         lozinka: ''
@@ -66,10 +67,16 @@ export default {
       const path = 'http://localhost:5000/prijava'
       axios.post(path, prijavaKorisnik)
         .then((res) => {
-          localStorage.setItem('usertoken', res.data)
-          this.loginForm.email = ''
-          this.loginForm.lozinka = ''
-          router.push({name: 'Profile'})
+          console.log(res.data)
+          if (res.data.status === 'success') {
+            localStorage.setItem('usertoken', res.data.access_token)
+            console.log(res.data.access_token)
+            this.loginForm.email = ''
+            this.loginForm.lozinka = ''
+
+            this.emitMethod()
+            router.push({name: 'Profile'})
+          }
           // if (res.status === 'success') {
           //   localStorage.setItem('usertoken', res.data)
           //   this.loginForm.email = ''
@@ -84,11 +91,10 @@ export default {
           // this.push('/troskovi')
         })
         .catch((error) => {
-          // this.message = 'Pogresan unos!'
-          // this.showMessage = true
+          this.message = 'Pogresno upisan email ili lozinka!'
+          this.showMessage = true
           console.log(error)
         })
-      this.emitMethod()
     },
     emitMethod () {
       EventBus.$emit('logged-in', 'loggedin')

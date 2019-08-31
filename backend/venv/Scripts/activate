@@ -46,7 +46,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="$(if [ "$OSTYPE" "==" "cygwin" ]; then cygpath -u 'C:\Users\struc\OneDrive\RADNAP~1\DWAPRO~1\backend\venv'; else echo '/C/Users/struc/OneDrive/RADNAP~1/DWAPRO~1/backend/venv'; fi;)"
+VIRTUAL_ENV="$(if [ "$OSTYPE" "==" "cygwin" ]; then cygpath -u 'C:\Users\MSSTUD~1\WEBSTO~1\UNTITL~1\backend\venv'; else echo '/C/Users/MSSTUD~1/WEBSTO~1/UNTITL~1/backend/venv'; fi;)"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
