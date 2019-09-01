@@ -3,21 +3,63 @@
     <div class="d-flex justify-content-center" style="height: 200px">
 
     </div>
-    <div class="d-flex justify-content-center" style="height: 400px; background-color: #86989B">
+    <div class="d-flex justify-content-center" style="height: 420px; background-color: #86989B">
       <div>
         <div>
-          <b-tabs content-class="mt-3">
-            <b-tab title="Korisnik" active style="width: 400px">
+          <b-tabs content-class="mt-3" style="width: 1110px">
+            <b-tab title="Korisnik" active style="justify-content: center">
               <p>Statistika po korisniku</p>
               <br>
-              <div id="chart">
-                <apexchart type=pie width=380 :options="chartOptions" :series="series" />
-              </div>
+                <b-container class="" style="width: 700px">
+                  <b-row>
+                    <b-col style="width: 600px">
+                      <div id="chart">
+                        <apexchart type=pie width=300 :options="chartOptions" :series="series" />
+                      </div>
+                    </b-col>
+
+                    <b-col style="width: 600px; margin-left: 100px">
+                      <p class="lead"><img src="../assets/auto.png" style="width: 30px"> {{ trosak_po_kategoriji_korisnik[0] | filterValuta}}</p>
+                      <p class="lead"><img src="../assets/hrana.png" style="width: 30px"> {{ trosak_po_kategoriji_korisnik[1] | filterValuta}}</p>
+                      <p class="lead"><img src="../assets/kuća.png" style="width: 30px"> {{ trosak_po_kategoriji_korisnik[2] | filterValuta}}</p>
+                      <p class="lead"><img src="../assets/mob.png" style="width: 30px"> {{ trosak_po_kategoriji_korisnik[3] | filterValuta}}</p>
+                      <p class="lead"><img src="../assets/roba.png" style="width: 30px"> {{ trosak_po_kategoriji_korisnik[4] | filterValuta}}</p>
+                      <p class="lead"><img src="../assets/shop.png" style="width: 30px"> {{ trosak_po_kategoriji_korisnik[5] | filterValuta}}</p>
+                      <p class="lead"><img src="../assets/sport.png" style="width: 30px"> {{ trosak_po_kategoriji_korisnik[6] | filterValuta}}</p>
+                      <p class="lead"><img src="../assets/zdravlje.png" style="width: 30px"> {{ trosak_po_kategoriji_korisnik[7] | filterValuta}}</p>
+                    </b-col>
+
+                  </b-row>
+                </b-container>
 
             </b-tab>
 
-            <b-tab title="Grupa" style="width: 400px">
+            <b-tab title="Grupa" active style="justify-content: center">
               <p>Statistika po grupi</p>
+              <br>
+
+              <b-container class="" style="width: 700px">
+                <b-row>
+                  <b-col style="width: 600px">
+                    <div id="">
+                      <apexchart type=pie width=300 :options="chartOptions" :series="series" />
+                    </div>
+                  </b-col>
+
+                  <b-col style="width: 600px; margin-left: 100px">
+                    <p class="lead"><img src="../assets/auto.png" style="width: 30px"> {{ trosak_po_kategoriji_korisnik[0] | filterValuta}}</p>
+                    <p class="lead"><img src="../assets/hrana.png" style="width: 30px"> {{ trosak_po_kategoriji_korisnik[1] | filterValuta}}</p>
+                    <p class="lead"><img src="../assets/kuća.png" style="width: 30px"> {{ trosak_po_kategoriji_korisnik[2] | filterValuta}}</p>
+                    <p class="lead"><img src="../assets/mob.png" style="width: 30px"> {{ trosak_po_kategoriji_korisnik[3] | filterValuta}}</p>
+                    <p class="lead"><img src="../assets/roba.png" style="width: 30px"> {{ trosak_po_kategoriji_korisnik[4] | filterValuta}}</p>
+                    <p class="lead"><img src="../assets/shop.png" style="width: 30px"> {{ trosak_po_kategoriji_korisnik[5] | filterValuta}}</p>
+                    <p class="lead"><img src="../assets/sport.png" style="width: 30px"> {{ trosak_po_kategoriji_korisnik[6] | filterValuta}}</p>
+                    <p class="lead"><img src="../assets/zdravlje.png" style="width: 30px"> {{ trosak_po_kategoriji_korisnik[7] | filterValuta}}</p>
+                  </b-col>
+
+                </b-row>
+              </b-container>
+
             </b-tab>
 
           </b-tabs>
@@ -56,10 +98,18 @@ import jwtDecode from 'jwt-decode'
 require('jwt-decode')
 Vue.component('apexchart', VueApexCharts)
 
+Vue.filter('filterValuta', function (value) {
+  return value + ' kn'
+})
+
 export default {
   data () {
     return {
       emailKorisnika: '',
+      korisnikgrupa: '',
+
+      grupe: [],
+      trosak_po_kategoriji_korisnik: [],
       series: [],
       chartOptions: {
         labels: ['Auto', 'Hrana', 'Kuca', 'Mobitel', 'Roba', 'Shop', 'Sport', 'Zdravlje'],
@@ -98,6 +148,10 @@ export default {
 
           console.log(newData)
           this.series = newData
+
+          this.trosak_po_kategoriji_korisnik = newData
+
+          console.log(this.trosak_po_kategoriji_korisnik)
         })
         .catch((error) => {
           console.error(error)
@@ -118,3 +172,12 @@ export default {
   }
 }
 </script>
+
+<style>
+  .lead {
+    font-family: 'Lucida Grande', 'Lucida Sans Unicode', 'Geneva', 'Verdana', sans-serif;
+    font-size: medium;
+    margin-bottom: 5px;
+    text-align: left;
+  }
+</style>
