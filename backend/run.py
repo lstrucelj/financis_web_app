@@ -42,6 +42,98 @@ def checkPass(password, hashPass):
      #   return 0
 
 
+@app.route('/korisnik/grupe', methods=['POST'])
+def dohvatiGrupeKorisnika():
+    response_object = {'status': 'success'}
+    if request.method == 'POST':
+        post_data = request.get_json()
+        email = post_data.get('email')
+
+        data = Korisnici.dohvati_sve_grupe_korisnika(email)
+
+        print(data)
+        if data is None:
+            return error()
+        newData = []
+        for d in data:
+            ime = d['ime']
+            grupa = {
+                "value": ime,
+                "text": ime
+            }
+
+            newData.append(grupa)
+
+        response_object['options'] = newData
+
+
+
+    return jsonify(response_object)
+
+
+
+
+
+
+@app.route('/grupa/korisnici', methods=['POST'])
+def dohvatiKorisnikeGrupe():
+    response_object = {'status': 'success'}
+    if request.method == 'POST':
+        post_data = request.get_json()
+
+        ime_grupe = post_data.get('ime')
+
+        data = Troskovi.dohvati_sve_korisnike_grupe(ime_grupe)
+        print(data)
+        if data is None:
+            return error()
+
+        newData = []
+
+        for k in data:
+            email = k['email']
+
+            #Korisnici.korisnik_trosak_po_kategoriji(_email, 'Auto')
+
+            auto = Troskovi.korisnik_trosak_po_kategoriji(email, 'Auto')
+            if auto is None:
+                return error()
+            hrana = Troskovi.korisnik_trosak_po_kategoriji(email, 'Hrana')
+            if hrana is None:
+                return error()
+            kuca = Troskovi.korisnik_trosak_po_kategoriji(email, 'Kuca')
+            if kuca is None:
+                return error()
+            mobitel = Troskovi.korisnik_trosak_po_kategoriji(email, 'Mobitel')
+            if mobitel is None:
+                return error()
+            roba = Troskovi.korisnik_trosak_po_kategoriji(email, 'Roba')
+            if roba is None:
+                return error()
+            shop = Troskovi.korisnik_trosak_po_kategoriji(email, 'Shop')
+            if shop is None:
+                return error()
+            sport = Troskovi.korisnik_trosak_po_kategoriji(email, 'Sport')
+            if sport is None:
+                return error()
+            zdravlje = Troskovi.korisnik_trosak_po_kategoriji(email, 'Zdravlje')
+            if zdravlje is None:
+                return error()
+
+            korisnik = {
+                "name": email,
+                "data": [auto, hrana, kuca, mobitel, roba, shop, sport, zdravlje]
+            }
+
+            newData.append(korisnik)
+
+        response_object['series'] = newData
+
+
+
+    return jsonify(response_object)
+
+
 
 @app.route('/grupa/korisnik', methods=['POST', 'DELETE'])
 def dodavanje_brisanje_korisnika_grupe():

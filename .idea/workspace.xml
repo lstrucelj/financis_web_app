@@ -4,6 +4,8 @@
     <list default="true" id="c71435cb-1bca-450b-88f9-af98aeb0e891" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/database.sqlite" beforeDir="false" afterPath="$PROJECT_DIR$/backend/database.sqlite" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/domain.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/domain.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/run.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/src/components/Statistika.vue" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/components/Statistika.vue" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -46,6 +48,8 @@
       <workItem from="1567294926763" duration="73000" />
       <workItem from="1567334587847" duration="194000" />
       <workItem from="1567368980796" duration="5651000" />
+      <workItem from="1567425880749" duration="503000" />
+      <workItem from="1567467023129" duration="2085000" />
     </task>
     <servers />
   </component>

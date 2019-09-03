@@ -66,6 +66,33 @@ class Grupe(Base):
 class Troskovi(Base):
     model_class = Trosak
 
+
+    @classmethod
+    @db_session
+    def dohvati_sve_korisnike_grupe(cls, _ime):
+
+        #dohvati korisnike grupe
+        data = select(g.korisnik for g in Grupa if g.ime == _ime)
+        if data is None:
+            return None
+
+        d = [u.to_dict() for u in data]
+        print(d)
+
+        newData = {}
+        for k in d:
+            email = k['email']
+            print(email)
+            newData[email] = 1
+
+
+        # korisnikovi troskovi
+        # select(( t.kategorija.naziv, sum (t.iznos)) for t in Trosak if t.korisnik.email == 'kskok@gmail.com').show()
+
+        return d
+
+
+
     @classmethod
     @db_session
     def dohvatiTrosakPoKategoriji(cls, _naziv):
@@ -94,6 +121,21 @@ class Troskovi(Base):
 
 class Korisnici(Base):
     model_class = Korisnik
+
+    @classmethod
+    @db_session
+    def dohvati_sve_grupe_korisnika(cls, _email):
+
+        data = select(k.grupa for k in Korisnik if k.email == _email)
+
+        if data is None:
+            return None
+
+        d = [u.to_dict() for u in data]
+
+        return d
+
+
 
     @classmethod
     @db_session
